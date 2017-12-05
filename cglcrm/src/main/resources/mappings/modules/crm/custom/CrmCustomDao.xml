@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rainy.cglcrm.modules.crm.dao.custom.CrmCustomDao">
+    
+	<sql id="crmCustomColumns">
+		a.id AS "id",
+		a.custom_source AS "customSource",
+		a.continent AS "continent",
+		a.country AS "country",
+		a.main_industry AS "mainIndustry",
+		a.management_format AS "managementFormat",
+		a.focus_products AS "focusProducts",
+		u.name AS "chargePerson.name",
+		u.id AS "chargePerson.id",
+		a.deal_stage AS "dealStage",
+		a.reback AS "reback",
+		a.last_contact_time AS "lastContactTime",
+		a.first_name AS "firstName",
+		a.middle_name AS "middleName",
+		a.last_name AS "lastName",
+		a.company AS "company",
+		a.email AS "email",
+		a.site AS "site",
+		a.phone AS "phone",
+		a.telephone AS "telephone",
+		a.remark AS "remark",
+		a.sys_deal_time AS "sysDealTime",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.create_person AS "createPerson",
+		a.update_person AS "updatePerson",
+		a.state AS "state",
+		a.email_cycle as "emailCycle"
+	</sql>
+	
+	<sql id="crmCustomJoins">
+		left join sys_user u on a.charge_person = u.id
+	</sql>
+    
+	<select id="get" resultType="CrmCustom">
+		SELECT 
+			<include refid="crmCustomColumns"/>
+		FROM crm_custom a
+		<include refid="crmCustomJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmCustom">
+		SELECT 
+			<include refid="crmCustomColumns"/>
+		FROM crm_custom a
+		<include refid="crmCustomJoins"/>
+		<if test="chargePerson != null and chargePerson != '' and chargePerson.name !=null and chargePerson.name!='' ">
+			inner join sys_user su on su.id = a.charge_person and su.name like concat('%',#{chargePerson.name},'%')  
+		</if>
+		<where>
+			
+			<if test="customSource != null and customSource != ''">
+				AND a.custom_source like concat('%',#{customSource},'%')  
+			</if>
+			<if test="continent != null and continent != ''">
+				AND a.continent like concat('%', #{continent},'%')  
+			</if>
+			<if test="country != null and country != ''">
+				AND a.country  like concat('%',#{country},'%')   
+			</if>
+			<if test="mainIndustry != null and mainIndustry != ''">
+				AND a.main_industry like concat('%', #{mainIndustry},'%') 
+			</if>
+			<if test="focusProducts != null and focusProducts != ''">
+				AND a.focus_products like concat('%',  #{focusProducts},'%')  
+			</if>
+			<if test="dealStage != null and dealStage != ''">
+				AND a.deal_stage = #{dealStage}
+			</if>
+			<if test="reback != null and reback != ''">
+				AND a.reback = #{reback}
+			</if>
+			<if test="beginLastContactTime != null and endLastContactTime != null and beginLastContactTime != '' and endLastContactTime != ''">
+				AND a.last_contact_time BETWEEN #{beginLastContactTime} AND #{endLastContactTime}
+			</if>
+			<if test="firstName != null and firstName != ''">
+				AND a.first_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{firstName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{firstName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{firstName},'%')</if>
+			</if>
+			<if test="middleName != null and middleName != ''">
+				AND a.middle_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{middleName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{middleName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{middleName},'%')</if>
+			</if>
+			<if test="lastName != null and lastName != ''">
+				AND a.last_name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{lastName}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{lastName}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{lastName},'%')</if>
+			</if>
+			<if test="company != null and company != ''">
+				AND a.company LIKE 
+					<if test="dbName == 'oracle'">'%'||#{company}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{company}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{company},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmCustom">
+		SELECT 
+			<include refid="crmCustomColumns"/>
+		FROM crm_custom a
+		<include refid="crmCustomJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	<select id="getProduct" resultType="com.rainy.cglcrm.modules.crm.entity.product.CrmProduct">
+		select 
+			a.id as "id",
+			a.product_name as  "productName",
+			a.pdesc as "pdesc",
+			a.remark as "remark"
+		from crm_product a
+		 where state = '1' 
+		<if test="productName != null and productName != ''" >
+			and product_name = #{productName}
+		</if>
+		<if test="productId != null and productId != ''" >
+			and id = #{productId}
+		</if>
+	</select>
+	<select id="findCustomByTodo" resultType="CrmCustom">
+		SELECT 
+			<include refid="crmCustomColumns"/>
+		FROM crm_custom a
+		left join sys_user u on a.charge_person = u.id 
+		inner join crm_todo_task ctt on ctt.custom_id = a.id 
+		<if test="beginTime != null and endTime != null and beginTime != '' and endTime != ''">
+			AND ctt.update_time BETWEEN #{beginTime} AND #{endTime}
+		</if>
+		<if test="dealState != null and dealState != ''">
+			AND ctt.deal_state = #{dealState}
+		</if>
+		<where>
+			<if test="currentId !=null and currentId != ''" >
+				and a.charge_person = #{currentId}
+			</if>
+			<if test="name!=null and name != ''">
+				AND CONCAT(c.last_name,' ',c.middle_name,' ',c.first_name) LIKE 
+					<if test="dbName == 'mysql'">concat('%',#{crmCustom.name},'%')</if>
+			</if>
+		</where>		
+	</select>
+	<insert id="saveProduct">
+		INSERT INTO crm_custom(
+			id,
+			product_name,
+			pdesc,
+			remark,
+			create_time,
+			update_time,
+			create_person,
+			update_person,
+			state,
+		) VALUES (
+			#{id},
+			#{productName},
+			#{pdesc},
+			#{remark},
+			#{create_time},
+			#{update_time},
+			#{create_person},
+			#{update_person}
+		)
+	</insert>
+	<insert id="insert">
+		INSERT INTO crm_custom(
+			id,
+			custom_source,
+			continent,
+			country,
+			main_industry,
+			management_format,
+			focus_products,
+			charge_person,
+			deal_stage,
+			reback,
+			last_contact_time,
+			first_name,
+			middle_name,
+			last_name,
+			company,
+			email,
+			site,
+			phone,
+			telephone,
+			remark,
+			sys_deal_time,
+			create_time,
+			update_time,
+			create_person,
+			update_person,
+			state,
+			email_cycle
+		) VALUES (
+			#{id},
+			#{customSource},
+			#{continent},
+			#{country},
+			#{mainIndustry},
+			#{managementFormat},
+			#{focusProducts},
+			#{chargePerson.id},
+			#{dealStage},
+			#{reback},
+			#{lastContactTime},
+			#{firstName},
+			#{middleName},
+			#{lastName},
+			#{company},
+			#{email},
+			#{site},
+			#{phone},
+			#{telephone},
+			#{remark},
+			#{sysDealTime},
+			#{createTime},
+			#{updateTime},
+			#{createPerson},
+			#{updatePerson},
+			#{state},
+			#{emailCycle}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE crm_custom SET 	
+			custom_source = #{customSource},
+			continent = #{continent},
+			country = #{country},
+			main_industry = #{mainIndustry},
+			management_format = #{managementFormat},
+			focus_products = #{focusProducts},
+			charge_person = #{chargePerson.id},
+			deal_stage = #{dealStage},
+			reback = #{reback},
+			last_contact_time = #{lastContactTime},
+			first_name = #{firstName},
+			middle_name = #{middleName},
+			last_name = #{lastName},
+			company = #{company},
+			email = #{email},
+			site = #{site},
+			phone = #{phone},
+			telephone = #{telephone},
+			remark = #{remark},
+			sys_deal_time = #{sysDealTime},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			create_person = #{createPerson},
+			update_person = #{updatePerson},
+			state = #{state},
+			email_cycle = #{emailCycle}
+		WHERE id = #{id}
+	</update>
+	<update id="updateZhouqi" >  
+	    update  
+	    crm_custom SET   
+	    email_cycle = #{emailCycle} 
+	    where  
+	    id=#{customId}
+	</update> 
+	
+	<update id="updateAllEmailCycle" >  
+	    update  
+	    crm_custom SET   
+	    email_cycle = #{emailCycle} 
+	    where  
+	    id in (${ids})
+	</update>
+	<update id="delete">
+		DELETE FROM crm_custom
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

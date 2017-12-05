@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rainy.cglcrm.modules.crm.dao.todolist.CrmTodoTaskDao">
+    
+	<sql id="crmTodoTaskColumns">
+		a.id AS "id",
+		a.custom_id AS "crmCustom.id",
+		CONCAT(c.last_name,' ',c.middle_name,' ',c.first_name) AS "crmCustom.name",
+		c.email as "crmCustom.email",
+		a.deal_state AS "dealState",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.create_person AS "createPerson",
+		a.update_person AS "updatePerson",
+		u.id as "chargePerson。id",
+		u.name as "chargePerson.name",
+		a.remark,
+		a.state AS "state"
+	</sql>
+	
+	<sql id="crmTodoTaskJoins">
+		left join sys_user u on a.charge_person = u.id
+		inner join crm_custom c on c.id = a.custom_id  
+		<if test="crmCustom!=null and crmCustom.name != null and crmCustom.name != ''">
+			AND CONCAT(c.last_name,' ',c.middle_name,' ',c.first_name) LIKE 
+				<if test="dbName == 'oracle'">'%'||#{crmCustom.name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{crmCustom.name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{crmCustom.name},'%')</if>
+		</if>
+	</sql>
+    
+	<select id="get" resultType="CrmTodoTask">
+		SELECT 
+			<include refid="crmTodoTaskColumns"/>
+		FROM crm_todo_task a
+		<include refid="crmTodoTaskJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmTodoTask">
+		SELECT 
+			<include refid="crmTodoTaskColumns"/>
+		FROM crm_todo_task a
+		<include refid="crmTodoTaskJoins"/>
+		<where>
+			<choose>
+				<when test="sqlMap.sctgRole !=null and sqlMap.sctgRole != ''">
+				</when>
+				<otherwise>
+					and a.charge_person = #{currentUser.id}
+				</otherwise>
+			</choose>
+			<if test="dealState != null and dealState != ''">
+				AND a.deal_state = #{dealState}
+			</if>
+			<if test="beginUpdateTime != null and endUpdateTime != null and beginUpdateTime != '' and endUpdateTime != ''">
+				AND a.update_time BETWEEN #{beginUpdateTime} AND #{endUpdateTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmTodoTask">
+		SELECT 
+			<include refid="crmTodoTaskColumns"/>
+		FROM crm_todo_task a
+		<include refid="crmTodoTaskJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO crm_todo_task(
+			id,
+			custom_id,
+			deal_state,
+			create_time,
+			update_time,
+			create_person,
+			update_person,
+			state
+		) VALUES (
+			#{id},
+			#{customId},
+			#{dealState},
+			#{createTime},
+			#{updateTime},
+			#{createPerson},
+			#{updatePerson},
+			#{state}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE crm_todo_task SET 	
+			custom_id = #{customId},
+			deal_state = #{dealState},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			create_person = #{createPerson},
+			update_person = #{updatePerson},
+			remark = #{remark}
+			state = #{state}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateDealState">
+		UPDATE crm_todo_task SET 	
+			deal_state = #{dealState},
+			update_time = #{updateTime},
+			update_person = #{updatePerson},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateCustomDealDate">
+		UPDATE crm_custom SET 	
+		<if test="lastContactTime !=null and lastContactTime !=''">
+			last_contact_time = #{lastContactTime},
+		</if>
+			sys_deal_time = #{sysDealTime}
+			
+		WHERE id = #{id}
+	</update>
+	<update id="delete">
+		DELETE FROM crm_todo_task
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

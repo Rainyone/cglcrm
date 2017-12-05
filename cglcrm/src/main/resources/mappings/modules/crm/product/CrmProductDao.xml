@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rainy.cglcrm.modules.crm.dao.product.CrmProductDao">
+    
+	<sql id="crmProductColumns">
+		a.id AS "id",
+		a.product_name AS "productName",
+		a.pdesc AS "pdesc",
+		a.remark AS "remark",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime",
+		a.create_person AS "createPerson",
+		a.update_person AS "updatePerson",
+		a.state AS "state"
+	</sql>
+	
+	<sql id="crmProductJoins">
+	</sql>
+    
+	<select id="get" resultType="CrmProduct">
+		SELECT 
+			<include refid="crmProductColumns"/>
+		FROM crm_product a
+		<include refid="crmProductJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CrmProduct">
+		SELECT 
+			<include refid="crmProductColumns"/>
+		FROM crm_product a
+		<include refid="crmProductJoins"/>
+		<where>
+			
+			<if test="productName != null and productName != ''">
+				AND a.product_name like concat('%',  #{productName},'%')  
+			</if>
+			<if test="pdesc != null and pdesc != ''">
+				AND a.pdesc like concat('%',  #{pdesc},'%') 
+			</if>
+			<if test="beginUpdateTime != null and endUpdateTime != null and beginUpdateTime != '' and endUpdateTime != ''">
+				AND a.update_time BETWEEN #{beginUpdateTime} AND #{endUpdateTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CrmProduct">
+		SELECT 
+			<include refid="crmProductColumns"/>
+		FROM crm_product a
+		<include refid="crmProductJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO crm_product(
+			id,
+			product_name,
+			pdesc,
+			remark,
+			create_time,
+			update_time,
+			create_person,
+			update_person,
+			state
+		) VALUES (
+			#{id},
+			#{productName},
+			#{pdesc},
+			#{remark},
+			#{createTime},
+			#{updateTime},
+			#{createPerson},
+			#{updatePerson},
+			#{state}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE crm_product SET 	
+			product_name = #{productName},
+			pdesc = #{pdesc},
+			remark = #{remark},
+			create_time = #{createTime},
+			update_time = #{updateTime},
+			create_person = #{createPerson},
+			update_person = #{updatePerson},
+			state = #{state}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM crm_product
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
