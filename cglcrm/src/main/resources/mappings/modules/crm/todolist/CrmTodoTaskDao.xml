@@ -53,9 +53,17 @@
 			<if test="dealState != null and dealState != ''">
 				AND a.deal_state = #{dealState}
 			</if>
-			<if test="beginUpdateTime != null and endUpdateTime != null and beginUpdateTime != '' and endUpdateTime != ''">
-				AND a.update_time BETWEEN #{beginUpdateTime} AND #{endUpdateTime}
-			</if>
+			<choose>
+				<when test="beginUpdateTime != null and endUpdateTime != null and beginUpdateTime != '' and endUpdateTime != ''">
+					AND a.create_time BETWEEN #{beginUpdateTime} AND #{endUpdateTime}
+				</when>
+				<when test="(beginUpdateTime == null or beginUpdateTime == '') and endUpdateTime != null  and endUpdateTime != ''">
+					AND a.create_time  &lt;= #{endUpdateTime}
+				</when>
+				<when test="beginUpdateTime != null and beginUpdateTime == '' and (endUpdateTime == null  and endUpdateTime == '')">
+					AND a.create_time  &gt;= #{endUpdateTime}
+				</when>
+			</choose>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

@@ -54,7 +54,9 @@
 			inner join sys_user su on su.id = a.charge_person and su.name like concat('%',#{chargePerson.name},'%')  
 		</if>
 		<where>
-			
+			<if test="focusProducts != null and focusProducts != '' ">
+				and a.focus_products like concat('%',#{focusProducts},'%') 
+			</if>
 			<if test="customSource != null and customSource != ''">
 				AND a.custom_source like concat('%',#{customSource},'%')  
 			</if>
@@ -185,7 +187,8 @@
 			#{create_time},
 			#{update_time},
 			#{create_person},
-			#{update_person}
+			#{update_person},
+			#{state}
 		)
 	</insert>
 	<insert id="insert">
@@ -298,4 +301,18 @@
 		WHERE id = #{id}
 	</update>
 	
+	<select id="getCustomSourceList" resultType="com.rainy.cglcrm.modules.sys.entity.Dict">
+		select distinct custom_source as 'value',custom_source as 'label','custom_source' as 'type' 
+		from crm_custom where state=1
+	</select>
+	
+	<select id="getMainIndustryList" resultType="com.rainy.cglcrm.modules.sys.entity.Dict">
+		select distinct main_industry as 'value',main_industry as 'label','main_industry' as 'type' 
+		from crm_custom where state=1
+	</select>
+	
+	<select id="getProductsList" resultType="com.rainy.cglcrm.modules.sys.entity.Dict">
+		select distinct id as 'value',product_name as 'label','product' as 'type' 
+		from crm_product where state=1
+	</select>
 </mapper>

@@ -129,6 +129,17 @@ public class CrmCustomController extends BaseController {
 		if (!beanValidator(model, crmCustom)){
 			return form(crmCustom, model);
 		}
+		if(crmCustom.getSysDealTime()==null) {
+			crmCustom.setSysDealTime(new Date());
+		}
+		if(crmCustom.getLastContactTime()==null) {
+			crmCustom.setSysDealTime(new Date());
+		}
+		crmCustom.setCreateTime(new Date());
+		crmCustom.setUpdateTime(new Date());
+		crmCustom.setCreatePerson(crmCustom.getCurrentUser().getId());
+		crmCustom.setUpdatePerson(crmCustom.getCurrentUser().getId());
+		crmCustom.setState("1");
 		crmCustomService.save(crmCustom);
 		addMessage(redirectAttributes, "保存客户关系管理成功");
 		return "redirect:"+Global.getAdminPath()+"/crm/custom/crmCustom/?repage";

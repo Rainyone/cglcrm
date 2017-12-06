@@ -131,19 +131,34 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
 			<li><label>客户来源：</label>
-				<form:input path="customSource" htmlEscape="false" maxlength="100" class="input-medium"/>
+				<form:select path="customSource"  class="input-medium">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getCustomSourceList()}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
+				</form:select>
 			</li>
 			<li><label>洲别：</label>
-				<form:input path="continent" htmlEscape="false" maxlength="64" class="input-medium"/>
+				<form:select path="continent"  class="input-medium">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getDictList('continent')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
+				</form:select>
 			</li>
 			<li><label>国家：</label>
-				<form:input path="country" htmlEscape="false" maxlength="64" class="input-medium"/>
+				<form:select path="country"  class="input-medium">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getDictList('country')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
+				</form:select>
 			</li>
 			<li><label>主营行业：</label>
-				<form:input path="mainIndustry" htmlEscape="false" maxlength="200" class="input-medium"/>
+				<form:select path="mainIndustry"  class="input-medium">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getMainIndustryList()}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
+				</form:select>
 			</li>
 			<li><label>关注产品：</label>
-				<form:input path="focusProducts" htmlEscape="false" maxlength="2000" class="input-medium"/>
+				<form:select path="focusProducts"  class="input-medium">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getProductsList()}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
+				</form:select>
 			</li>
 			<li><label>负责人：</label>
 				<form:input path="chargePerson.name" htmlEscape="false" maxlength="64" class="input-medium"/>
@@ -192,8 +207,11 @@
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr><th><input type='checkbox' onclick="checkAll(this);"></th>
+				<th>姓名</th>
 				<th>客户来源</th>
+				<th>洲别</th>
 				<th>国家</th>
+				<th>主营行业</th>
 				<th>关注产品</th>
 				<th>负责人</th>
 				<th>成交阶段</th>
@@ -210,12 +228,21 @@
 		<tbody>
 		<c:forEach items="${page.list}" var="crmCustom">
 			<tr>
-					<td><input type='checkbox' value="${crmCustom.id}"></td>
+				<td><input type='checkbox' value="${crmCustom.id}"></td>
 				<td><a href="${ctx}/crm/custom/crmCustom/form?id=${crmCustom.id}">
-					${crmCustom.customSource}
+					${crmCustom.firstName} ${crmCustom.middleName} ${crmCustom.lastName}
 				</a></td>
 				<td>
-					${crmCustom.country}
+					${crmCustom.customSource}
+				</td>
+				<td>
+					${fns:getDictLabel(crmCustom.continent,"continent","")}
+				</td>
+				<td>
+					${fns:getDictLabel(crmCustom.country,"country","")}
+				</td>
+				<td>
+					${crmCustom.mainIndustry}
 				</td>
 				<td>
 					${fns:getProductsName(crmCustom.focusProducts)}

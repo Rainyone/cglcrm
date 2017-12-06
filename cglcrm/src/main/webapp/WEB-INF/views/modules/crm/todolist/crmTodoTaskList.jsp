@@ -138,6 +138,7 @@
 				<th>email</th>
 				<th>说明</th>
 				<th>处理状态</th>
+				<th>处理时间</th>
 				<th>提醒时间</th>
 				<shiro:hasPermission name="crm:todolist:crmTodoTask:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
@@ -160,6 +161,9 @@
 				</td>
 				<td>
 					<fmt:formatDate value="${crmTodoTask.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
+					<fmt:formatDate value="${crmTodoTask.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<shiro:hasPermission name="crm:todolist:crmTodoTask:edit"><td>
 					<c:choose>

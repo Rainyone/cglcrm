@@ -152,6 +152,30 @@
     <function-signature>java.lang.String getProductsName(java.lang.String)</function-signature>
     <example>${fns:getProductsName(ids)}</example>  
   </function>
+  
+  <function>
+    <description>获取客户来源字典</description>
+    <name>getCustomSourceList</name>
+    <function-class>com.rainy.cglcrm.modules.sys.utils.ProductUtils</function-class>
+    <function-signature>java.lang.String getCustomSourceList()</function-signature>
+    <example>${fns:getCustomSourceList()}</example>  
+  </function>
+  
+  <function>
+    <description>获取主营行业</description>
+    <name>getMainIndustryList</name>
+    <function-class>com.rainy.cglcrm.modules.sys.utils.ProductUtils</function-class>
+    <function-signature>java.lang.String getMainIndustryList()</function-signature>
+    <example>${fns:getMainIndustryList()}</example>  
+  </function>
+  
+  <function>
+    <description>获取产品</description>
+    <name>getProductsList</name>
+    <function-class>com.rainy.cglcrm.modules.sys.utils.ProductUtils</function-class>
+    <function-signature>java.lang.String getProductsList()</function-signature>
+    <example>${fns:getProductsList()}</example>  
+  </function>
   <!-- Encodes -->
   <function>
     <description>URL编码</description>

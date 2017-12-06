@@ -12,6 +12,7 @@ import com.rainy.cglcrm.common.persistence.CrudDao;
 import com.rainy.cglcrm.common.persistence.annotation.MyBatisDao;
 import com.rainy.cglcrm.modules.crm.entity.custom.CrmCustom;
 import com.rainy.cglcrm.modules.crm.entity.product.CrmProduct;
+import com.rainy.cglcrm.modules.sys.entity.Dict;
 
 /**
  * 客户关系管理DAO接口
@@ -28,5 +29,11 @@ public interface CrmCustomDao extends CrudDao<CrmCustom> {
 
 	int saveProduct(CrmProduct cpsave);
 
-	List<CrmCustom> findCustomByTodo(@Param("name")String name, @Param("beginTime")Date beginUpdateTime, @Param("endTime")Date endUpdateTime,@Param("currentId")String currentId,@Param("dealState")String dealState); 
+	List<CrmCustom> findCustomByTodo(@Param("name")String name, @Param("beginTime")Date beginUpdateTime, @Param("endTime")Date endUpdateTime,@Param("currentId")String currentId,@Param("dealState")String dealState);
+
+	List<Dict> getCustomSourceList();
+
+	List<Dict> getMainIndustryList();
+
+	List<Dict> getProductsList(); 
 }
