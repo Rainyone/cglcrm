@@ -77,7 +77,7 @@ public class CrmCustom extends DataEntity<CrmCustom> {
 	}
 
 	@Length(min=0, max=100, message="客户来源长度必须介于 0 和 100 之间")
-	@ExcelField(title="客户来源**请填写正确的数据1", align=2, sort=10)
+	@ExcelField(title="客户来源", align=2, sort=10)
 	public String getCustomSource() {
 		return customSource;
 	}
@@ -87,7 +87,7 @@ public class CrmCustom extends DataEntity<CrmCustom> {
 	}
 	
 	@Length(min=0, max=64, message="洲别长度必须介于 0 和 64 之间")
-	@ExcelField(title="洲别", align=2, sort=30)
+	@ExcelField(title="洲别", align=2, sort=30,dictType="continent")
 	public String getContinent() {
 		return continent;
 	}
@@ -97,7 +97,7 @@ public class CrmCustom extends DataEntity<CrmCustom> {
 	}
 	
 	@Length(min=0, max=64, message="国家长度必须介于 0 和 64 之间")
-	@ExcelField(title="国家", align=2, sort=20)
+	@ExcelField(title="国家", align=2, sort=20,dictType="country")
 	public String getCountry() {
 		return country;
 	}

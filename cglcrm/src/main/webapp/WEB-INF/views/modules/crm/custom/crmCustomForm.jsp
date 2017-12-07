@@ -74,13 +74,19 @@
 		<div class="control-group">
 			<label class="control-label">洲别：</label>
 			<div class="controls">
-				<form:input path="continent" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:select path="continent"  class="select-input input-xlarge ">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getDictList('continent')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
+				</form:select>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">国家：</label>
 			<div class="controls">
-				<form:input path="country" htmlEscape="false" maxlength="64" class="input-xlarge "/>
+				<form:select path="country"  class="select-input input-xlarge">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getDictList('country')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
+				</form:select>
 			</div>
 		</div>
 		<div class="control-group">

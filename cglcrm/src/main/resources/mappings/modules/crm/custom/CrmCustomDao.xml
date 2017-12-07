@@ -111,6 +111,7 @@
 				ORDER BY ${page.orderBy}
 			</when>
 			<otherwise>
+				ORDER BY a.update_time desc
 			</otherwise>
 		</choose>
 	</select>
@@ -151,14 +152,15 @@
 			<include refid="crmCustomColumns"/>
 		FROM crm_custom a
 		left join sys_user u on a.charge_person = u.id 
-		inner join crm_todo_task ctt on ctt.custom_id = a.id 
+		inner join crm_todo_task ctt on ctt.custom_id = a.id and ctt.state = 1
 		<if test="beginTime != null and endTime != null and beginTime != '' and endTime != ''">
-			AND ctt.update_time BETWEEN #{beginTime} AND #{endTime}
+			AND ctt.create_time BETWEEN #{beginTime} AND #{endTime}
 		</if>
 		<if test="dealState != null and dealState != ''">
 			AND ctt.deal_state = #{dealState}
 		</if>
 		<where>
+			a.state = 1
 			<if test="currentId !=null and currentId != ''" >
 				and a.charge_person = #{currentId}
 			</if>

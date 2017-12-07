@@ -136,10 +136,13 @@
 			<tr><th><input type='checkbox' onclick="checkAll(this);"></th>
 				<th>客户名称</th>
 				<th>email</th>
+				<th>关注产品</th>
+				<th>负责人</th>
+				<th>成交阶段</th>
+				<th>反馈情况</th>
+				<th>最后联系时间</th>
 				<th>说明</th>
-				<th>处理状态</th>
 				<th>处理时间</th>
-				<th>提醒时间</th>
 				<shiro:hasPermission name="crm:todolist:crmTodoTask:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
 		</thead>
@@ -154,16 +157,25 @@
 					${crmTodoTask.crmCustom.email}
 				</td>
 				<td>
+					${fns:getProductsName(crmTodoTask.crmCustom.focusProducts)}
+				</td>
+				<td>
+					${crmTodoTask.chargePerson.name}
+				</td>
+				<td>
+					${fns:getDictLabel(crmTodoTask.crmCustom.dealStage, "deal_stage","")}
+				</td>
+				<td>
+					${fns:getDictLabel(crmTodoTask.crmCustom.reback, "reback","")}
+				</td>
+				<td>
+					<fmt:formatDate value="${crmTodoTask.crmCustom.lastContactTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+				</td>
+				<td>
 					${crmTodoTask.remark}
 				</td>
 				<td>
-					${fns:getDictLabel(crmTodoTask.dealState, "deal_state", 0)}
-				</td>
-				<td>
 					<fmt:formatDate value="${crmTodoTask.updateTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
-				</td>
-				<td>
-					<fmt:formatDate value="${crmTodoTask.createTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<shiro:hasPermission name="crm:todolist:crmTodoTask:edit"><td>
 					<c:choose>

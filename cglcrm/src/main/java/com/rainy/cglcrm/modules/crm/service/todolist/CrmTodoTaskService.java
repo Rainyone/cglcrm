@@ -33,6 +33,7 @@ public class CrmTodoTaskService extends CrudService<CrmTodoTaskDao, CrmTodoTask>
 	}
 	
 	public Page<CrmTodoTask> findPage(Page<CrmTodoTask> page, CrmTodoTask crmTodoTask) {
+		//市场推广人员能看到全部，其他人只能看本人的
 		if(crmTodoTask.getCurrentUser().getRoleIdList().contains("e8b93c6833494eb8b7244ef8e25cf55a")) {
 			crmTodoTask.getSqlMap().put("sctgRole", "not null");
 		}

@@ -274,11 +274,13 @@ public class CrmCustomController extends BaseController {
 								}
 							}
 						}
+						crmCustom.setFocusProducts(productIds);
 					}
 					Date nowDate = new Date();
 					crmCustom.setSysDealTime(nowDate);
-					crmCustom.setCreateDate(nowDate);
-					crmCustom.setUpdateDate(nowDate);
+					crmCustom.setCreateTime(nowDate);
+					crmCustom.setUpdateTime(nowDate);
+					crmCustom.setLastContactTime(nowDate);
 					crmCustom.setCreatePerson(UserUtils.getUser().getId());
 					crmCustom.setUpdatePerson(UserUtils.getUser().getId());
 					crmCustom.setState("1");
@@ -300,6 +302,7 @@ public class CrmCustomController extends BaseController {
 			}
 			addMessage(redirectAttributes, "已成功导入 "+successNum+" 条"+failureMsg);
 		} catch (Exception e) {
+			e.printStackTrace();
 			addMessage(redirectAttributes, "导入失败！失败信息："+e.getMessage());
 		}
 		return "redirect:" + Global.getAdminPath() + "/crm/custom/crmCustom/?repage";

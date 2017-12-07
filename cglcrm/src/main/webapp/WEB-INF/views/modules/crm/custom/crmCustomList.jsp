@@ -119,7 +119,7 @@
 			class="form-search" style="padding-left:20px;text-align:center;" onsubmit="loading('正在导入，请稍等...');"><br/>
 			<input id="uploadFile" name="file" type="file" style="width:330px"/><br/><br/>　　
 			<input id="btnImportSubmit" class="btn btn-primary" type="submit" value="   导    入   "/>
-			<a href="${ctx}/crm/custom/crmCustom/import/template">下载模板</a>
+			<a href="${ctxStatic}/model.xlsx">下载模板</a>
 		</form>
 	</div>
 	<ul class="nav nav-tabs">
@@ -131,31 +131,31 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<ul class="ul-form">
 			<li><label>客户来源：</label>
-				<form:select path="customSource"  class="input-medium">
+				<form:select path="customSource"  class="select-input input-medium">
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getCustomSourceList()}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
 			</li>
 			<li><label>洲别：</label>
-				<form:select path="continent"  class="input-medium">
+				<form:select path="continent"  class="select-input input-medium">
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getDictList('continent')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
 			</li>
 			<li><label>国家：</label>
-				<form:select path="country"  class="input-medium">
+				<form:select path="country"  class="select-input input-medium">
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getDictList('country')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
 			</li>
 			<li><label>主营行业：</label>
-				<form:select path="mainIndustry"  class="input-medium">
+				<form:select path="mainIndustry"  class="select-input input-medium">
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getMainIndustryList()}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
 			</li>
 			<li><label>关注产品：</label>
-				<form:select path="focusProducts"  class="input-medium">
+				<form:select path="focusProducts"  class="select-input input-medium">
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getProductsList()}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
@@ -164,13 +164,13 @@
 				<form:input path="chargePerson.name" htmlEscape="false" maxlength="64" class="input-medium"/>
 			</li>
 			<li><label>成交阶段：</label>
-				<form:select path="dealStage"  class="input-medium">
+				<form:select path="dealStage"  class="select-input input-medium" >
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getDictList('deal_stage')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
 			</li>
 			<li><label>反馈情况：</label>
-				<form:select path="reback"  class="input-medium">
+				<form:select path="reback"  class="select-input input-medium">
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getDictList('reback')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>

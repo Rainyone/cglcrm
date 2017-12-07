@@ -86,7 +86,7 @@ public class CrmCustomService extends CrudService<CrmCustomDao, CrmCustom> {
 	public Page<CrmCustom> findCustomByTodo(CrmTodoTask crmTodoTask) {
 		Page<CrmCustom> page = new Page<CrmCustom>();
 		String currentId = "";
-		if(crmTodoTask.getCurrentUser().getRoleIdList().contains("e8b93c6833494eb8b7244ef8e25cf55a")) {
+		if(!crmTodoTask.getCurrentUser().getRoleIdList().contains("e8b93c6833494eb8b7244ef8e25cf55a")) {
 			currentId = crmTodoTask.getCurrentUser().getId();
 		}
 		
