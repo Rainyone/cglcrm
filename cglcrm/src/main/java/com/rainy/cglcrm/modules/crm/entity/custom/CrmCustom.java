@@ -48,8 +48,17 @@ public class CrmCustom extends DataEntity<CrmCustom> {
 	private Date endLastContactTime;		// 结束 最后联系时间
 	private String emailCycle;		// 
 	private String name;
+	private String telEmailSite;
 	
 	
+	public String getTelEmailSite() {
+		return telEmailSite;
+	}
+
+	public void setTelEmailSite(String telEmailSite) {
+		this.telEmailSite = telEmailSite;
+	}
+
 	public String getName() {
 		return name;
 	}

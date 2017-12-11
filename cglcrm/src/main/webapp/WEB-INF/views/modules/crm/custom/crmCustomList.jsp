@@ -23,7 +23,20 @@
 					$("#searchForm").attr("action","${ctx}/crm/custom/crmCustom/");
 					$("#searchForm").submit();
 				});
+				
+				$("#btnReset").click(function() {
+					clearForm();
+				});
+				
 		});
+		
+		function clearForm() {
+			$("#searchForm :input[type != 'button']").val("");
+			$("#searchForm .select2-chosen").each(function(){
+				this.innerHTML = "请选择";
+			});
+		}
+		
 		function page(n,s){
 			$("#pageNo").val(n);
 			$("#pageSize").val(s);
@@ -136,16 +149,16 @@
 					<form:options items="${fns:getCustomSourceList()}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
 			</li>
-			<li><label>洲别：</label>
-				<form:select path="continent"  class="select-input input-medium">
-					<form:option value="" label="请选择"/>
-					<form:options items="${fns:getDictList('continent')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
-				</form:select>
-			</li>
 			<li><label>国家：</label>
 				<form:select path="country"  class="select-input input-medium">
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getDictList('country')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
+				</form:select>
+			</li>
+			<li><label>洲别：</label>
+				<form:select path="continent"  class="select-input input-medium">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getDictList('continent')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
 			</li>
 			<li><label>主营行业：</label>
@@ -161,7 +174,9 @@
 				</form:select>
 			</li>
 			<li><label>负责人：</label>
-				<form:input path="chargePerson.name" htmlEscape="false" maxlength="64" class="input-medium"/>
+				<sys:treeselect id="chargePerson" name="chargePerson.id" value="${crmCustom.chargePerson.id}" labelName="chargePerson.name" labelValue="${crmCustom.chargePerson.name}"
+					title="用户" url="/sys/office/treeData?type=3" cssStyle="    width: 118px;" allowClear="true" notAllowSelectParent="true" />
+			
 			</li>
 			<li><label>成交阶段：</label>
 				<form:select path="dealStage"  class="select-input input-medium" >
@@ -187,6 +202,9 @@
 			<li><label>公司名：</label>
 				<form:input path="company" htmlEscape="false" maxlength="100" class="input-medium"/>
 			</li>
+			<li><label style="    width: 120px;">电话、邮箱、网址：</label>
+				<form:input path="telEmailSite" htmlEscape="false" maxlength="100" class="input-medium"/>
+			</li>
 			<li><label style="width: 100px;">最后联系时间：</label>
 				<input name="beginLastContactTime" type="text" readonly="readonly" maxlength="20" class="input-medium Wdate"
 					value="<fmt:formatDate value="${crmCustom.beginLastContactTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"
@@ -197,6 +215,7 @@
 			</li>
 			<li class="btns">
 				<input id="btnSubmit" class="btn btn-primary" type="button" value="查询"/>
+				<input id="btnReset" class="btn btn-primary" type="button" value="重置"/>
 				<input id="btnExport" class="btn btn-primary" type="button" value="导出"/>
 				<input id="btnImport" class="btn btn-primary" type="button" value="导入"/>
 			</li>
@@ -204,6 +223,7 @@
 		</ul>
 	</form:form>
 	<sys:message content="${message}"/>
+	<div style="width:100%;overflow-x:scroll;">
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr><th><input type='checkbox' onclick="checkAll(this);"></th>
@@ -284,6 +304,7 @@
 		</tbody>
 	</table>
 	<div class="pagination">${page}</div>
+	</div>
 	<shiro:hasPermission name="crm:custom:crmCustom:edit">
 		<div class="form-actions pagination-left" style=" margin-top:0px">
 			<select id="email_cycle" name="email_cycle" class="select2-container input-medium">  

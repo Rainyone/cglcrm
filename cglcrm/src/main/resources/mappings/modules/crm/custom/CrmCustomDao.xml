@@ -105,6 +105,14 @@
 					<if test="dbName == 'mssql'">'%'+#{company}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{company},'%')</if>
 			</if>
+			
+			<if test="telEmailSite != null and telEmailSite != ''">
+				AND ( a.email like concat('%',  #{telEmailSite},'%')  
+				or a.phone like concat('%',  #{telEmailSite},'%') 
+				or a.telephone like concat('%',  #{telEmailSite},'%')  
+				or a.site like concat('%',  #{telEmailSite},'%')  
+				)
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
