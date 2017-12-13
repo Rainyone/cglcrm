@@ -99,6 +99,38 @@
 				$.jBox.tip("请选择相应的记录", 'error');
 			}
 		}
+		function deleteFun(){
+			var del_ids="";
+			$(".table input:checkbox:checked").each(function () {
+				del_ids += $(this)[0].id + ",";
+		    });
+			if(del_ids){
+				top.$.jBox.confirm('确定要删除吗？','系统提示',function(v,h,f){
+					if(v=='ok'){
+						$.ajax({
+							url: '${ctx}/crm/todolist/crmTodoTask/deleteFun',
+							type: 'POST',
+							dataType: "json",
+							data: {del_ids:del_ids},
+							complete:function(data) {
+								if(data.responseText){
+									if(data.responseText.indexOf("ok")>=0){
+										window.location.href = "${ctx}/crm/todolist/crmTodoTask/?dealState=${dealState}"
+										$.jBox.tip("操作成功", 'success');
+									}
+								}
+							}
+						});
+					}
+				},{buttonsFocus:1, closed:function(){
+					if (typeof closed == 'function') {
+						closed();
+					}
+				}});
+			}else{
+				$.jBox.tip("请选择相应的记录", 'error');
+			}
+		}
 	</script>
 </head>
 <body>
@@ -207,12 +239,12 @@
 				</c:when>
 				<c:when test="${dealState=='1'}">
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="moreUpdateTodoTaskFun('waitDeal')">待处理</a>
-<%-- 					<a class="btn btn-primary" href="${ctx}/crm/todolist/crmTodoTask/delete?taskid=${crmTodoTask.id}&dealState=${crmTodoTask.dealState}" onclick="return confirmx('确认要删除该待办任务吗？', this.href)">删除</a>
- --%>				</c:when>
+ 					<a class="btn btn-primary" href="javascript:void(0)" onclick="deleteFun()">删除</a>
+ 				</c:when>
 				<c:when test="${dealState=='2'}">
 					<a class="btn btn-primary" href="javascript:void(0)" onclick="moreUpdateTodoTaskFun('waitDeal')">待处理</a>
-<%-- 					<a class="btn btn-primary" href="${ctx}/crm/todolist/crmTodoTask/delete?taskid=${crmTodoTask.id}&dealState=${crmTodoTask.dealState}" onclick="return confirmx('确认要删除该待办任务吗？', this.href)">删除</a>
- --%>				</c:when>
+					<a class="btn btn-primary" href="javascript:void(0)" onclick="deleteFun()">删除</a>
+				</c:when>
 			</c:choose>
 		</div>
 	</shiro:hasPermission>

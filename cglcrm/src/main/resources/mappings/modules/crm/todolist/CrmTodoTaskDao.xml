@@ -38,7 +38,7 @@
 			<include refid="crmTodoTaskColumns"/>
 		FROM crm_todo_task a
 		<include refid="crmTodoTaskJoins"/>
-		WHERE a.id = #{id}
+		WHERE a.id = #{id} and state=1
 	</select>
 	
 	<select id="findList" resultType="CrmTodoTask">
@@ -47,6 +47,7 @@
 		FROM crm_todo_task a
 		<include refid="crmTodoTaskJoins"/>
 		<where>
+			and a.state=1
 			<choose>
 				<when test="sqlMap.sctgRole !=null and sqlMap.sctgRole != ''">
 				</when>
@@ -81,7 +82,7 @@
 	<select id="findAllList" resultType="CrmTodoTask">
 		SELECT 
 			<include refid="crmTodoTaskColumns"/>
-		FROM crm_todo_task a
+		FROM crm_todo_task a where a.state=1
 		<include refid="crmTodoTaskJoins"/>
 		<where>
 			
@@ -136,7 +137,7 @@
 			update_time = #{updateTime},
 			update_person = #{updatePerson},
 			remark = #{remark}
-		WHERE id = #{id}
+		WHERE id = #{id} and state = 1
 	</update>
 	
 	<update id="updateCustomDealDate">
@@ -149,8 +150,8 @@
 		WHERE id = #{id}
 	</update>
 	<update id="delete">
-		DELETE FROM crm_todo_task
-		WHERE id = #{id}
+		UPDATE crm_todo_task SET state = 0
+		WHERE id = #{id} and state = 1
 	</update>
 	
 </mapper>

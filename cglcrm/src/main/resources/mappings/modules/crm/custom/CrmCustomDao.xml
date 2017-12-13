@@ -42,7 +42,7 @@
 			<include refid="crmCustomColumns"/>
 		FROM crm_custom a
 		<include refid="crmCustomJoins"/>
-		WHERE a.id = #{id}
+		WHERE a.id = #{id} and a.state = 1
 	</select>
 	
 	<select id="findList" resultType="CrmCustom">
@@ -54,6 +54,7 @@
 			inner join sys_user su on su.id = a.charge_person and su.name like concat('%',#{chargePerson.name},'%')  
 		</if>
 		<where>
+			and a.state = 1
 			<if test="focusProducts != null and focusProducts != '' ">
 				and a.focus_products like concat('%',#{focusProducts},'%') 
 			</if>
@@ -127,7 +128,7 @@
 	<select id="findAllList" resultType="CrmCustom">
 		SELECT 
 			<include refid="crmCustomColumns"/>
-		FROM crm_custom a
+		FROM crm_custom a where a.state = 1
 		<include refid="crmCustomJoins"/>
 		<where>
 			
@@ -289,14 +290,14 @@
 			update_person = #{updatePerson},
 			state = #{state},
 			email_cycle = #{emailCycle}
-		WHERE id = #{id}
+		WHERE id = #{id} and state = 1
 	</update>
 	<update id="updateZhouqi" >  
 	    update  
 	    crm_custom SET   
 	    email_cycle = #{emailCycle} 
 	    where  
-	    id=#{customId}
+	    id=#{customId} and state = 1
 	</update> 
 	
 	<update id="updateAllEmailCycle" >  
@@ -304,11 +305,14 @@
 	    crm_custom SET   
 	    email_cycle = #{emailCycle} 
 	    where  
-	    id in (${ids})
+	    id in (${ids}) and state = 1
 	</update>
 	<update id="delete">
-		DELETE FROM crm_custom
-		WHERE id = #{id}
+		 update  
+	    crm_custom SET   
+	    state = 0
+	    where  
+	    state = 1 and id=#{id}
 	</update>
 	
 	<select id="getCustomSourceList" resultType="com.rainy.cglcrm.modules.sys.entity.Dict">

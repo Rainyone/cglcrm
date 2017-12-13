@@ -109,16 +109,20 @@ public class CrmTodoTaskController extends BaseController {
 		model.addAttribute("crmCustom", crmCustom);
 		return "modules/crm/todolist/crmTodoTaskForm";
 	}
-	/*@RequiresPermissions("crm:todolist:crmTodoTask:edit")
-	@RequestMapping(value = "save")
-	public String save(CrmTodoTask crmTodoTask, Model model, RedirectAttributes redirectAttributes) {
-		if (!beanValidator(model, crmTodoTask)){
-			return form(crmTodoTask, model);
+	@RequiresPermissions("crm:todolist:crmTodoTask:edit")
+	@RequestMapping(value = "deleteFun")
+	@ResponseBody
+	public String deleteFun(String del_ids, Model model, RedirectAttributes redirectAttributes) {
+		if(StringUtils.isNotBlank(del_ids)) {
+			String[] taskIds = del_ids.split(",");
+			for(String id:taskIds) {
+				CrmTodoTask crmTodoTask = new CrmTodoTask();
+				crmTodoTask.setId(id);
+				crmTodoTaskService.delete(crmTodoTask);
+			}
 		}
-		crmTodoTaskService.save(crmTodoTask);
-		addMessage(redirectAttributes, "保存待办任务成功");
-		return "redirect:"+Global.getAdminPath()+"/crm/todolist/crmTodoTask/?repage";
-	}*/
+		return "{success:'ok'}";
+	}
 	
 	@RequiresPermissions("crm:todolist:crmTodoTask:edit")
 	@RequestMapping(value = "delete")

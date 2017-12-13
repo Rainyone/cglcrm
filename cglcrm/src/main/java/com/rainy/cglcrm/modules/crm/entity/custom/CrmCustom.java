@@ -145,7 +145,7 @@ public class CrmCustom extends DataEntity<CrmCustom> {
 		this.focusProducts = focusProducts;
 	}
 	
-	@ExcelField(title="负责人",value="chargePerson.name", align=2, sort=70)
+	@ExcelField(title="负责人",value="chargePerson.name", align=2, sort=70,fieldType=Class.class)
 	public User getChargePerson() {
 		return chargePerson;
 	}

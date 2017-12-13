@@ -44,7 +44,7 @@
         	return false;
         }
 		function zhouqiButtonFun(customId,value){
-			top.$.jBox.open("iframe:${ctx}/crm/custom/crmCustom/crmCustomZhouqi?id=" + customId + "&emailCycle=" + value, "添加相关",400,320,{
+			top.$.jBox.open("iframe:${ctx}/crm/custom/crmCustom/crmCustomZhouqi?id=" + customId + "&emailCycle=" + value, "周期设置",400,320,{
 				buttons:{"确定":true}, loaded:function(h){
 					console.info('customId:' + customId + ";value: " + value);
 					$(".jbox-content", top.document).css("overflow-y","hidden");
@@ -124,6 +124,57 @@
 			    });
 		     }
 		}
+		function changeContinent(){
+			var selectCountry = $("#country");
+			var continentVal = $("#continent").val();
+			var countryList = ${fns:toJson(fns:getDictList('country'))}
+			if(countryList){
+				var optionHtml = '<option class="input-medium" value="" checked="checked">请选择</option>';
+				for(var i=0;i<countryList.length;i++){
+					var oneCountry = countryList[i];
+					if(oneCountry.parentId==continentVal){
+						optionHtml +='<option class="input-medium" value="'+oneCountry.value+'">'+oneCountry.label+'</option>'
+					}else if(continentVal==""){
+						optionHtml +='<option class="input-medium" value="'+oneCountry.value+'">'+oneCountry.label+'</option>'
+					}
+				}
+				selectCountry.html(optionHtml);
+				selectCountry.val("");
+				selectCountry.parent().find('.select2-chosen')[0].innerHTML = "请选择";
+			}
+		}
+		function deleteMoreCustomFun(){
+			var ids = "";
+			$(".table input:checkbox:checked").each(function () {
+				ids +=  $(this).val() + ",";
+		    });
+			if(ids){
+				top.$.jBox.confirm('确定要删除吗？','系统提示',function(v,h,f){
+					if(v=='ok'){
+						$.ajax({
+							url: '${ctx}/crm/custom/crmCustom/deleteMoreCustomFun',
+							type: 'POST',
+							dataType: "json",
+							data: {ids:ids},
+							complete:function(data) {
+								if(data.responseText){
+									if(data.responseText.indexOf("ok")>=0){
+										window.location.href = "${ctx}/crm/custom/crmCustom/"
+										$.jBox.tip("操作成功", 'success');
+									}
+								}
+							}
+						});
+					}
+				},{buttonsFocus:1, closed:function(){
+					if (typeof closed == 'function') {
+						closed();
+					}
+				}});
+			}else{
+				$.jBox.tip("请选择相应的记录", 'error');
+			}
+		}
 	</script>
 </head>
 <body>
@@ -149,23 +200,20 @@
 					<form:options items="${fns:getCustomSourceList()}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
 			</li>
+			<li><label>洲别：</label>
+				<form:select path="continent"  class="select-input input-medium" onchange="changeContinent()">
+					<form:option value="" label="请选择"/>
+					<form:options items="${fns:getDictList('continent')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium" />
+				</form:select>
+			</li>
 			<li><label>国家：</label>
-				<form:select path="country"  class="select-input input-medium">
+				<form:select path="country"  class="select-input input-medium" id="country" onchange="changeCountry()">
 					<form:option value="" label="请选择"/>
 					<form:options items="${fns:getDictList('country')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
 				</form:select>
 			</li>
-			<li><label>洲别：</label>
-				<form:select path="continent"  class="select-input input-medium">
-					<form:option value="" label="请选择"/>
-					<form:options items="${fns:getDictList('continent')}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
-				</form:select>
-			</li>
 			<li><label>主营行业：</label>
-				<form:select path="mainIndustry"  class="select-input input-medium">
-					<form:option value="" label="请选择"/>
-					<form:options items="${fns:getMainIndustryList()}" itemLabel="label" itemValue="value" htmlEscape="false" class="input-medium"/>
-				</form:select>
+				<form:input path="mainIndustry" htmlEscape="false" maxlength="100" class="input-medium"/>
 			</li>
 			<li><label>关注产品：</label>
 				<form:select path="focusProducts"  class="select-input input-medium">
@@ -223,7 +271,6 @@
 		</ul>
 	</form:form>
 	<sys:message content="${message}"/>
-	<div style="width:100%;overflow-x:scroll;">
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr><th><input type='checkbox' onclick="checkAll(this);"></th>
@@ -304,7 +351,6 @@
 		</tbody>
 	</table>
 	<div class="pagination">${page}</div>
-	</div>
 	<shiro:hasPermission name="crm:custom:crmCustom:edit">
 		<div class="form-actions pagination-left" style=" margin-top:0px">
 			<select id="email_cycle" name="email_cycle" class="select2-container input-medium">  
@@ -313,6 +359,7 @@
 				</c:forEach>
 			</select>  
 			<input id="updateAllSubmit" class="btn btn-primary" type="button" value ="保持邮件周期" onclick="updateAllEmailCycle();"/>
+			<input class="btn btn-primary" type="button" value ="删除" onclick="deleteMoreCustomFun();"/>
 		</div>
 	</shiro:hasPermission>
 </body>

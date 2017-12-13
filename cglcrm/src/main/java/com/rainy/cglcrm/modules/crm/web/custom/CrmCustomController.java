@@ -33,6 +33,7 @@ import com.rainy.cglcrm.common.utils.excel.ExportExcel;
 import com.rainy.cglcrm.common.utils.excel.ImportExcel;
 import com.rainy.cglcrm.modules.crm.entity.custom.CrmCustom;
 import com.rainy.cglcrm.modules.crm.entity.product.CrmProduct;
+import com.rainy.cglcrm.modules.crm.entity.todolist.CrmTodoTask;
 import com.rainy.cglcrm.modules.crm.service.custom.CrmCustomService;
 import com.rainy.cglcrm.modules.sys.entity.Dict;
 import com.rainy.cglcrm.modules.sys.entity.User;
@@ -146,6 +147,20 @@ public class CrmCustomController extends BaseController {
 	}
 	
 	@RequiresPermissions("crm:custom:crmCustom:edit")
+	@RequestMapping(value = "deleteMoreCustomFun")
+	@ResponseBody
+	public String deleteMoreCustomFun(String ids, RedirectAttributes redirectAttributes) {
+		if(StringUtils.isNotBlank(ids)) {
+			String[] taskIds = ids.split(",");
+			for(String id:taskIds) {
+				CrmCustom crmCustom = new CrmCustom();
+				crmCustom.setId(id);
+				crmCustomService.delete(crmCustom);
+			}
+		}
+		return "{success:'ok'}";
+	}
+	@RequiresPermissions("crm:custom:crmCustom:edit")
 	@RequestMapping(value = "delete")
 	public String delete(CrmCustom crmCustom, RedirectAttributes redirectAttributes) {
 		crmCustomService.delete(crmCustom);
@@ -223,16 +238,8 @@ public class CrmCustomController extends BaseController {
 			for (CrmCustom crmCustom : list){
 				try{
 					//负责人为空则默认为本人处理
-					if(crmCustom.getChargePerson()!=null&&StringUtils.isNotBlank(crmCustom.getChargePerson().getId())) {
-						crmCustom.setChargePerson(UserUtils.getUser());
-					}else {
-						User u = UserUtils.getByLoginName(crmCustom.getChargePerson().getId());
-						//如果用户名查不到用户则也默认为当前用户负责
-						if(u!=null) {
-							crmCustom.setChargePerson(u);
-						}else {
-							crmCustom.setChargePerson(UserUtils.getUser());
-						}
+					if(crmCustom.getChargePerson()==null||StringUtils.isBlank(crmCustom.getChargePerson().getId())) {
+						throw new Exception("负责人为空或者没有填写正确的登录名");
 					}
 					//处理产品
 					if(StringUtils.isNotBlank(crmCustom.getFocusProducts())) {
@@ -287,14 +294,14 @@ public class CrmCustomController extends BaseController {
 					crmCustomService.save(crmCustom);;
 					successNum++;
 				}catch(ConstraintViolationException ex){
-					failureMsg.append("<br/>客户来源 "+crmCustom.getCustomSource()+" 导入失败：");
+					failureMsg.append("<br/>客户 "+crmCustom.getFirstName()+" 导入失败："+ex.getMessage());
 					List<String> messageList = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");
 					for (String message : messageList){
 						failureMsg.append(message+"; ");
 						failureNum++;
 					}
 				}catch (Exception ex) {
-					failureMsg.append("<br/>客户来源 "+crmCustom.getCustomSource()+" 导入失败："+ex.getMessage());
+					failureMsg.append("<br/>客户 "+crmCustom.getFirstName()+" 导入失败："+ex.getMessage());
 				}
 			}
 			if (failureNum>0){
