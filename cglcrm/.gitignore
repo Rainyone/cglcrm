@@ -8,7 +8,7 @@
 .rar
 .idea
 *.iml
-.gitattributes
+.git*
 LICENSE.txt
 /.settings/
 /.settings/*
