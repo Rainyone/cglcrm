@@ -23,6 +23,7 @@
 		function page(n,s){
 			$("#pageNo").val(n);
 			$("#pageSize").val(s);
+			$("#searchForm").attr("action","${ctx}/crm/todolist/crmTodoTask/");
 			$("#searchForm").submit();
         	return false;
         }

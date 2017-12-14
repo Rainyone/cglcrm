@@ -24,7 +24,7 @@
 	
 	<sql id="crmTodoTaskJoins">
 		left join sys_user u on a.charge_person = u.id
-		inner join crm_custom c on c.id = a.custom_id  
+		inner join crm_custom c on c.id = a.custom_id  and c.state=1
 		<if test="crmCustom!=null and crmCustom.name != null and crmCustom.name != ''">
 			AND CONCAT(c.last_name,' ',c.middle_name,' ',c.first_name) LIKE 
 				<if test="dbName == 'oracle'">'%'||#{crmCustom.name}||'%'</if>

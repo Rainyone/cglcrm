@@ -180,11 +180,11 @@ public class CrmCustomController extends BaseController {
     public String exportFile(CrmCustom crmCustom, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
 		try {
             String fileName = "客户数据"+DateUtils.getDate("yyyyMMddHHmmss")+".xlsx";
-            Page<CrmCustom> page =  crmCustomService.findPage(new Page<CrmCustom>(request, response,-1), crmCustom);
+            List<CrmCustom> list =  crmCustomService.findList(crmCustom);
             //对关注的产品转换为名称
-            if(page!=null&&page.getList()!=null&&page.getList().size()>0){
+            if(list!=null&&list.size()>0){
             	//遍历客户列表
-            	for(CrmCustom cc:page.getList()) {
+            	for(CrmCustom cc:list) {
             		String ids = cc.getFocusProducts();
             		String names = "";
             		//遍历产品id
@@ -207,7 +207,7 @@ public class CrmCustomController extends BaseController {
             		cc.setFocusProducts(names);
             	}
             }
-    		new ExportExcel("客户数据", CrmCustom.class).setDataList(page.getList()).write(response, fileName).dispose();
+    		new ExportExcel("客户数据", CrmCustom.class).setDataList(list).write(response, fileName).dispose();
     		return null;
 		} catch (Exception e) {
 			e.printStackTrace();

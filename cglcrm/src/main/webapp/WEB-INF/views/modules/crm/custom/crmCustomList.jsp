@@ -40,6 +40,7 @@
 		function page(n,s){
 			$("#pageNo").val(n);
 			$("#pageSize").val(s);
+			$("#searchForm").attr("action","${ctx}/crm/custom/crmCustom/");
 			$("#searchForm").submit();
         	return false;
         }
