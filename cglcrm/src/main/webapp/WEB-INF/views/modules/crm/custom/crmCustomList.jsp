@@ -280,6 +280,7 @@
 				<th>洲别</th>
 				<th>国家</th>
 				<th>主营行业</th>
+				<th>经营业态</th>
 				<th>关注产品</th>
 				<th>负责人</th>
 				<th>成交阶段</th>
@@ -288,7 +289,8 @@
 				<th>公司名</th>
 				<th>手机</th>
 				<th>电话</th>
-				<th>系统处理时间</th>
+				<th>网址</th>
+				<th>邮箱</th>
 				<th>邮件周期</th>
 				<shiro:hasPermission name="crm:custom:crmCustom:edit"><th>操作</th></shiro:hasPermission>
 			</tr>
@@ -311,6 +313,9 @@
 				</td>
 				<td>
 					${crmCustom.mainIndustry}
+				</td>
+				<td>
+					${crmCustom.managementFormat}
 				</td>
 				<td>
 					${fns:getProductsName(crmCustom.focusProducts)}
@@ -337,8 +342,12 @@
 					${crmCustom.telephone}
 				</td>
 				<td>
-					<fmt:formatDate value="${crmCustom.sysDealTime}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					${crmCustom.site}
 				</td>
+				<td>
+					${crmCustom.email}
+				</td>
+			
 				<td id="${crmCustom.id}Td">
 					${fns:getDictLabel(crmCustom.emailCycle, "email_cycle", "未设置")}
 				</td>
