@@ -180,7 +180,7 @@
 		</where>		
 	</select>
 	<insert id="saveProduct">
-		INSERT INTO crm_custom(
+		INSERT INTO crm_product(
 			id,
 			product_name,
 			pdesc,
@@ -189,16 +189,16 @@
 			update_time,
 			create_person,
 			update_person,
-			state,
+			state
 		) VALUES (
 			#{id},
 			#{productName},
 			#{pdesc},
 			#{remark},
-			#{create_time},
-			#{update_time},
-			#{create_person},
-			#{update_person},
+			#{createTime},
+			#{updateTime},
+			#{createPerson},
+			#{updatePerson},
 			#{state}
 		)
 	</insert>

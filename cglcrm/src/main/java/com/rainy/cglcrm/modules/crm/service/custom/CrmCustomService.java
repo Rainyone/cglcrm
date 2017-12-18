@@ -73,7 +73,7 @@ public class CrmCustomService extends CrudService<CrmCustomDao, CrmCustom> {
 		CrmProduct crmProd = dao.getProduct(productName,productId);
 		return crmProd;
 	}
-
+	@Transactional(readOnly = false)
 	public String saveProduct(CrmProduct cpsave) {
 		String id = IdGen.uuid();
 		cpsave.setId(id);

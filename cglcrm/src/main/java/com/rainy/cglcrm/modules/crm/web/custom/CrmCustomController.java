@@ -237,62 +237,66 @@ public class CrmCustomController extends BaseController {
 			List<CrmCustom> list = ei.getDataList(CrmCustom.class);
 			for (CrmCustom crmCustom : list){
 				try{
-					//负责人为空则默认为本人处理
-					if(crmCustom.getChargePerson()==null||StringUtils.isBlank(crmCustom.getChargePerson().getId())) {
-						throw new Exception("负责人为空或者没有填写正确的登录名");
-					}
-					//处理产品
-					if(StringUtils.isNotBlank(crmCustom.getFocusProducts())) {
-						//逗号隔开
-						String [] products = crmCustom.getFocusProducts().split(",");
-						String productIds = "";
-						for(String prod:products) {
-							CrmProduct cp = crmCustomService.getProduct(prod,null);
-							//如果有值则不保存产品表
-							if(cp!=null&&cp.getId()!=null&&StringUtils.isNotBlank(cp.getId())) {
-								if(StringUtils.isNotBlank(productIds)){
-									//如果已经关注过此产品则忽略,否则添加
-									if(!productIds.contains(cp.getId())) {
-										productIds += "," + cp.getId();
-									}
-								}else {
-									productIds = cp.getId();
-								}
-							}
-							//如果没有查到产品则入库新产品
-							else {
-								CrmProduct cpsave = new CrmProduct();
-								cpsave.setProductName(prod);
-								cpsave.setPdesc(prod);
-								cpsave.setRemark(prod);
-								cpsave.setCreateTime(new Date());
-								cpsave.setUpdateTime(new Date());
-								cpsave.setCreatePerson(cpsave.getCurrentUser().getId());
-								cpsave.setUpdatePerson(cpsave.getCurrentUser().getId());
-								cpsave.setState("1");
-								String id = crmCustomService.saveProduct(cpsave);
-								if(StringUtils.isNotBlank(productIds)){
-									//如果已经关注过此产品则忽略,否则添加
-									if(!productIds.contains(id)) {
-										productIds += "," + id;
-									}
-								}else {
-									productIds = id;
-								}
-							}
+					if(crmCustom.isAllNull()) {
+						continue;
+					}else {
+						//负责人为空则默认为本人处理
+						if(crmCustom.getChargePerson()==null||StringUtils.isBlank(crmCustom.getChargePerson().getId())) {
+							throw new Exception("负责人为空或者没有填写正确的登录名");
 						}
-						crmCustom.setFocusProducts(productIds);
+						//处理产品
+						if(StringUtils.isNotBlank(crmCustom.getFocusProducts())) {
+							//逗号隔开
+							String [] products = crmCustom.getFocusProducts().split(",");
+							String productIds = "";
+							for(String prod:products) {
+								CrmProduct cp = crmCustomService.getProduct(prod,null);
+								//如果有值则不保存产品表
+								if(cp!=null&&cp.getId()!=null&&StringUtils.isNotBlank(cp.getId())) {
+									if(StringUtils.isNotBlank(productIds)){
+										//如果已经关注过此产品则忽略,否则添加
+										if(!productIds.contains(cp.getId())) {
+											productIds += "," + cp.getId();
+										}
+									}else {
+										productIds = cp.getId();
+									}
+								}
+								//如果没有查到产品则入库新产品
+								else {
+									CrmProduct cpsave = new CrmProduct();
+									cpsave.setProductName(prod);
+									cpsave.setPdesc(prod);
+									cpsave.setRemark(prod);
+									cpsave.setCreateTime(new Date());
+									cpsave.setUpdateTime(new Date());
+									cpsave.setCreatePerson(cpsave.getCurrentUser().getId());
+									cpsave.setUpdatePerson(cpsave.getCurrentUser().getId());
+									cpsave.setState("1");
+									String id = crmCustomService.saveProduct(cpsave);
+									if(StringUtils.isNotBlank(productIds)){
+										//如果已经关注过此产品则忽略,否则添加
+										if(!productIds.contains(id)) {
+											productIds += "," + id;
+										}
+									}else {
+										productIds = id;
+									}
+								}
+							}
+							crmCustom.setFocusProducts(productIds);
+						}
+						Date nowDate = new Date();
+						crmCustom.setSysDealTime(nowDate);
+						crmCustom.setCreateTime(nowDate);
+						crmCustom.setUpdateTime(nowDate);
+						crmCustom.setLastContactTime(nowDate);
+						crmCustom.setCreatePerson(UserUtils.getUser().getId());
+						crmCustom.setUpdatePerson(UserUtils.getUser().getId());
+						crmCustom.setState("1");
+						crmCustomService.save(crmCustom);;
+						successNum++;
 					}
-					Date nowDate = new Date();
-					crmCustom.setSysDealTime(nowDate);
-					crmCustom.setCreateTime(nowDate);
-					crmCustom.setUpdateTime(nowDate);
-					crmCustom.setLastContactTime(nowDate);
-					crmCustom.setCreatePerson(UserUtils.getUser().getId());
-					crmCustom.setUpdatePerson(UserUtils.getUser().getId());
-					crmCustom.setState("1");
-					crmCustomService.save(crmCustom);;
-					successNum++;
 				}catch(ConstraintViolationException ex){
 					failureMsg.append("<br/>客户 "+crmCustom.getFirstName()+" 导入失败："+ex.getMessage());
 					List<String> messageList = BeanValidators.extractPropertyAndMessageAsList(ex, ": ");

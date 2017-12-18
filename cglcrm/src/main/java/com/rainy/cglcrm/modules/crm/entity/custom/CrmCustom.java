@@ -8,6 +8,7 @@ import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.rainy.cglcrm.common.persistence.DataEntity;
+import com.rainy.cglcrm.common.utils.StringUtils;
 import com.rainy.cglcrm.common.utils.excel.annotation.ExcelField;
 import com.rainy.cglcrm.modules.sys.entity.User;
 
@@ -50,7 +51,23 @@ public class CrmCustom extends DataEntity<CrmCustom> {
 	private String name;
 	private String telEmailSite;
 	
-	
+	public boolean isAllNull() {
+		return StringUtils.isBlank(customSource)&&StringUtils.isBlank(continent)&&StringUtils.isBlank(country)&&
+				StringUtils.isBlank(mainIndustry)&&
+				StringUtils.isBlank(managementFormat)&&
+				StringUtils.isBlank(focusProducts)&&
+				StringUtils.isBlank(dealStage)&&
+				StringUtils.isBlank(reback)&&
+				StringUtils.isBlank(firstName)&&
+				StringUtils.isBlank(middleName)&&
+				StringUtils.isBlank(lastName)&&
+				StringUtils.isBlank(company)&&
+				StringUtils.isBlank(email)&&
+				StringUtils.isBlank(site)&&
+				StringUtils.isBlank(phone)&&
+				StringUtils.isBlank(telephone)&&
+				StringUtils.isBlank(remark);
+	}
 	public String getTelEmailSite() {
 		return telEmailSite;
 	}
