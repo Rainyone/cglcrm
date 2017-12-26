@@ -25,7 +25,10 @@
 				});
 				
 				$("#btnReset").click(function() {
-					clearForm();
+					if(clearForm()){
+						$("#searchForm").attr("action","${ctx}/crm/custom/crmCustom/");
+						$("#searchForm").submit();
+					}
 				});
 				
 		});
@@ -35,6 +38,7 @@
 			$("#searchForm .select2-chosen").each(function(){
 				this.innerHTML = "请选择";
 			});
+			return true;
 		}
 		
 		function page(n,s){
