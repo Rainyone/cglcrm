@@ -74,12 +74,6 @@
 				<form:input path="updatePerson" htmlEscape="false" maxlength="64" class="input-xlarge "/>
 			</div>
 		</div>
-		<div class="control-group">
-			<label class="control-label">状态（1正常0删除）：</label>
-			<div class="controls">
-				<form:input path="state" htmlEscape="false" maxlength="1" class="input-xlarge "/>
-			</div>
-		</div>
 		<div class="form-actions">
 			<shiro:hasPermission name="crm:todolist:crmTodoTask:edit"><input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>

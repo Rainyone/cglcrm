@@ -143,6 +143,12 @@
 			</div>
 		</div>
 		<div class="control-group">
+			<label class="control-label">称谓：</label>
+			<div class="controls">
+				<form:input path="cwname" htmlEscape="false" maxlength="20" class="input-xlarge "/>
+			</div>
+		</div>
+		<div class="control-group">
 			<label class="control-label">名字：</label>
 			<div class="controls">
 				<form:input path="firstName" htmlEscape="false" maxlength="20" class="input-xlarge "/>

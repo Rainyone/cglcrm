@@ -30,7 +30,8 @@
 		a.create_person AS "createPerson",
 		a.update_person AS "updatePerson",
 		a.state AS "state",
-		a.email_cycle as "emailCycle"
+		a.email_cycle as "emailCycle",
+		a.cwname as "cwname"
 	</sql>
 	
 	<sql id="crmCustomJoins">
@@ -230,7 +231,8 @@
 			create_person,
 			update_person,
 			state,
-			email_cycle
+			email_cycle,
+			cwname
 		) VALUES (
 			#{id},
 			#{customSource},
@@ -258,7 +260,8 @@
 			#{createPerson},
 			#{updatePerson},
 			#{state},
-			#{emailCycle}
+			#{emailCycle},
+			#{cwname}
 		)
 	</insert>
 	
@@ -289,7 +292,8 @@
 			create_person = #{createPerson},
 			update_person = #{updatePerson},
 			state = #{state},
-			email_cycle = #{emailCycle}
+			email_cycle = #{emailCycle},
+			cwname=#{cwname}
 		WHERE id = #{id} and state = 1
 	</update>
 	<update id="updateZhouqi" >  

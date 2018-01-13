@@ -49,6 +49,7 @@ public class CrmCustom extends DataEntity<CrmCustom> {
 	private Date endLastContactTime;		// 结束 最后联系时间
 	private String emailCycle;		// 
 	private String name;
+	private String cwname;//称谓
 	private String telEmailSite;
 	
 	public boolean isAllNull() {
@@ -66,8 +67,18 @@ public class CrmCustom extends DataEntity<CrmCustom> {
 				StringUtils.isBlank(site)&&
 				StringUtils.isBlank(phone)&&
 				StringUtils.isBlank(telephone)&&
-				StringUtils.isBlank(remark);
+				StringUtils.isBlank(remark)&&
+				StringUtils.isBlank(cwname);
 	}
+	@ExcelField(title="称谓", align=2, sort=91)
+	public String getCwname() {
+		return cwname;
+	}
+
+	public void setCwname(String cwname) {
+		this.cwname = cwname;
+	}
+
 	public String getTelEmailSite() {
 		return telEmailSite;
 	}
